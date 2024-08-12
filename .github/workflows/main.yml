@@ -1,0 +1,41 @@
+# This workflow has the following steps:
+# Linting all the newly created or updated JavaScript files between consecutive pushes and pull requests affecting the main branch
+
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: './package.json'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Get list of changed files
+        id: changed-files
+        run: |
+          echo "::set-output name=files::$(git diff --name-only ${{ github.base_ref }} ${{github.head_ref}}
+            | grep '\.js$'
+            | tr '\n' ' ')"
+
+      - name: Run linter on changed files
+        run: |
+          if [ -n "${{ steps.changed-files.outputs.files }}" ]; then
+            npm run lint -- ${{ steps.changed-files.outputs.files }}
+          else
+            echo "No JavaScript files changed"
+          fi
