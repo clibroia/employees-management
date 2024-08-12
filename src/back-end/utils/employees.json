@@ -1,0 +1,117 @@
+{
+    "employees": [
+        {
+            "id": 1001,
+            "firstName": "Alice",
+            "middleName": "Marie",
+            "lastName": "Johnson",
+            "department": "HR",
+            "role": "Manager",
+            "startDate": "2020-01-15",
+            "email": "alice.johnson@example.com",
+            "phoneNumber": "+1234567890",
+            "password": "Passw0rd123!"
+        },
+        {
+            "id": 1002,
+            "firstName": "Bob",
+            "middleName": "Lee",
+            "lastName": "Smith",
+            "department": "Finance",
+            "role": "Manager",
+            "startDate": "2018-06-01",
+            "email": "bob.smith@example.com",
+            "phoneNumber": "+1987654321",
+            "password": "S3cur3P@ss!"
+        },
+        {
+            "id": 1003,
+            "firstName": "Carol",
+            "lastName": "Davis",
+            "department": "IT",
+            "role": "Director",
+            "startDate": "2021-09-10",
+            "email": "carol.davis@example.com",
+            "phoneNumber": "+1098765432",
+            "password": "Dev!1234"
+        },
+        {
+            "id": 1004,
+            "firstName": "David",
+            "lastName": "Lee",
+            "department": "Sales",
+            "role": "Assistant Manager",
+            "startDate": "2019-03-20",
+            "email": "david.lee@example.com",
+            "phoneNumber": "+1122334455",
+            "password": "Sale$2024"
+        },
+        {
+            "id": 1005,
+            "firstName": "Emma",
+            "middleName": "Grace",
+            "lastName": "Turner",
+            "department": "Customer Service",
+            "role": "Clerk L3",
+            "startDate": "2022-07-12",
+            "email": "emma.turner@example.com",
+            "phoneNumber": "+1223344556",
+            "password": "Cust0m!234"
+        },
+        {
+            "id": 1006,
+            "firstName": "Frank",
+            "lastName": "Martin",
+            "department": "Operations",
+            "role": "Vice-President",
+            "startDate": "2017-11-25",
+            "email": "frank.martin@example.com",
+            "phoneNumber": "+1334455667",
+            "password": "Op3r@tions"
+        },
+        {
+            "id": 1007,
+            "firstName": "Grace",
+            "lastName": "Wilson",
+            "department": "Legal",
+            "role": "Manager",
+            "startDate": "2023-05-18",
+            "email": "grace.wilson@example.com",
+            "phoneNumber": "+1445566778",
+            "password": "L3gal!2024"
+        },
+        {
+            "id": 1008,
+            "firstName": "Henry",
+            "lastName": "Brown",
+            "department": "Administrative",
+            "role": "Clerk L5",
+            "startDate": "2016-02-14",
+            "email": "henry.brown@example.com",
+            "phoneNumber": "+1556677889",
+            "password": "Admin@2024"
+        },
+        {
+            "id": 1009,
+            "firstName": "Claire",
+            "lastName": "Martinez",
+            "department": "Procurement",
+            "role": "Manager",
+            "startDate": "2019-08-23",
+            "email": "claire.martinez@example.com",
+            "phoneNumber": "+1667788990",
+            "password": "Procure2024!"
+        },
+        {
+            "id": 1010,
+            "firstName": "Robert",
+            "lastName": "Adams",
+            "department": "R&D",
+            "role": "Chief Operating Officer",
+            "startDate": "2015-12-01",
+            "email": "robert.adams@example.com",
+            "phoneNumber": "+1778899001",
+            "password": "R&D@2024"
+        }
+    ]
+}
