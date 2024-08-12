@@ -9,7 +9,7 @@ const dbName = "employeesManagement";
 const collectionName = "employees";
 
 // Reading the array of items and discarding the plaintexts passwords
-const filename = path.join(__dirname, "./employees.json");
+const filename = path.join(__dirname, `./${process.env.DATA_SRC}`);
 const data = JSON.parse(fs.readFileSync(filename, "utf-8")).employees;
 
 // Connecting to the database
