@@ -13,6 +13,8 @@
   "author": "clibroia",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^9.9.0"
+    "@eslint/js": "^9.9.0",
+    "eslint": "^9.9.0",
+    "globals": "^15.9.0"
   }
 }
