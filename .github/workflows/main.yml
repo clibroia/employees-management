@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -27,7 +29,7 @@ jobs:
 
       - name: Get list of changed files
         run: |
-          files=$(git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }} \
+          files=$(git diff --name-only HEAD^ HEAD \
             | grep '\.js$' \
             | tr '\n' ' ')
           echo "FILES=$files" >> $GITHUB_ENV
