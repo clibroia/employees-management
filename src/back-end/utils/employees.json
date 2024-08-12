@@ -10,7 +10,7 @@
             "startDate": "2020-01-15",
             "email": "alice.johnson@example.com",
             "phoneNumber": "+1234567890",
-            "password": "Passw0rd123!"
+            "password": "$2b$10$4iHU2xivvDl7wIWjAeoX0.mP5s6RxNP5.WwMMlOYwvse13MaFllAG"
         },
         {
             "id": 1002,
@@ -22,7 +22,7 @@
             "startDate": "2018-06-01",
             "email": "bob.smith@example.com",
             "phoneNumber": "+1987654321",
-            "password": "S3cur3P@ss!"
+            "password": "$2b$10$IZa7r1OoiSHy.vpLr9B7vuys9UWW60.j1oXOpmJJJqxJHgvwMtbPe"
         },
         {
             "id": 1003,
@@ -33,7 +33,7 @@
             "startDate": "2021-09-10",
             "email": "carol.davis@example.com",
             "phoneNumber": "+1098765432",
-            "password": "Dev!1234"
+            "password": "$2b$10$Poj661kRuvjegps7Q0aUhe2diD47m12UVm2NYL//Hm2fFsckaGQEC"
         },
         {
             "id": 1004,
@@ -44,7 +44,7 @@
             "startDate": "2019-03-20",
             "email": "david.lee@example.com",
             "phoneNumber": "+1122334455",
-            "password": "Sale$2024"
+            "password": "$2b$10$/GiSIWt/VZGWZhyyM6ycUexN/3OHLTfuRvGSug47ZKSgJ6Gw/YWHm"
         },
         {
             "id": 1005,
@@ -56,7 +56,7 @@
             "startDate": "2022-07-12",
             "email": "emma.turner@example.com",
             "phoneNumber": "+1223344556",
-            "password": "Cust0m!234"
+            "password": "$2b$10$I0mTNO4W7utV892F1rB3vurKqXXwgZtyLX8x9QVBO1PyrGAiq4tmm"
         },
         {
             "id": 1006,
@@ -67,7 +67,7 @@
             "startDate": "2017-11-25",
             "email": "frank.martin@example.com",
             "phoneNumber": "+1334455667",
-            "password": "Op3r@tions"
+            "password": "$2b$10$EUkDKbNbzj/7j1nRAHkwm.5H5TiT7IV0jkYzj7TGmAuaGsk3LnwTe"
         },
         {
             "id": 1007,
@@ -78,7 +78,7 @@
             "startDate": "2023-05-18",
             "email": "grace.wilson@example.com",
             "phoneNumber": "+1445566778",
-            "password": "L3gal!2024"
+            "password": "$2b$10$DV/g498wmIBN9BQZ8hxy1eRcdkICQS21VM3E.1pHHDP0jDeCpR8/m"
         },
         {
             "id": 1008,
@@ -89,7 +89,7 @@
             "startDate": "2016-02-14",
             "email": "henry.brown@example.com",
             "phoneNumber": "+1556677889",
-            "password": "Admin@2024"
+            "password": "$2b$10$egtt.Lr.uDifSHJNHmM0xOyaXCG7scuJGundS50fmUM34h2GIYREa"
         },
         {
             "id": 1009,
@@ -100,7 +100,7 @@
             "startDate": "2019-08-23",
             "email": "claire.martinez@example.com",
             "phoneNumber": "+1667788990",
-            "password": "Procure2024!"
+            "password": "$2b$10$Kmt.QCboUvo0PLQH7AkKOuCQO2iGw8g5KQzoo/fGW7CvCFN9AF1GS"
         },
         {
             "id": 1010,
@@ -111,7 +111,7 @@
             "startDate": "2015-12-01",
             "email": "robert.adams@example.com",
             "phoneNumber": "+1778899001",
-            "password": "R&D@2024"
+            "password": "$2b$10$LiyjpKP1c99xy0vlRr0CNef0JyuTBsq.NhuU9RcoKvGOXhMiS3zgK"
         }
     ]
 }
