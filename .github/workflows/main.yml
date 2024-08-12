@@ -30,12 +30,12 @@ jobs:
           files=$(git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }} \
             | grep '\.js$' \
             | tr '\n' ' ')
-          echo "files=$files" >> $GITHUB_ENV
+          echo "FILES=$files" >> $GITHUB_ENV
 
       - name: Run linter on changed files
         run: |
-          if [ -n "${{ env.files }}" ]; then
-            npm run lint -- ${{ env.files }}
+          if [ -n "$FILES" ]; then
+            npx eslint $FILES
           else
             echo "No JavaScript files changed"
           fi
