@@ -6,7 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": ">=20.15.0"
+  },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "clibroia",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^9.9.0"
+  }
 }
