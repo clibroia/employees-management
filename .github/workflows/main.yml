@@ -37,6 +37,7 @@ jobs:
       - name: Run linter on changed files
         run: |
           if [ -n "$FILES" ]; then
+            echo "Linting $FILES"
             npx eslint $FILES
           else
             echo "No JavaScript files changed"
