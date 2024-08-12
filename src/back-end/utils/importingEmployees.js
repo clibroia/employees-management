@@ -5,7 +5,6 @@ const fs = require("fs")
 
 // MongoDB connection info
 const url = `${process.env.MONGO_URL}`
-console.log(url)
 const dbName = "employeesManagement"
 const collectionName = "employees"
 
