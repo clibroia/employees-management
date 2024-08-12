@@ -1,5 +1,5 @@
 import globals from "globals";
-import {configs, pluginJSConfigs} from "@eslint/js";
+import {pluginJSConfigs} from "@eslint/js";
 import eslintConfigESLint from "eslint-config-eslint";
 import eslintConfigEslintFormatting from "eslint-config-eslint/formatting";
 
