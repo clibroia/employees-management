@@ -5,17 +5,12 @@ const fs = require("fs")
 
 // MongoDB connection info
 const url = `${process.env.MONGO_URL}`
-console.log('test')
 const dbName = "employeesManagement"
 const collectionName = "employees"
 
 // Reading the array of items and discarding the plaintexts passwords
 const filename = path.join(__dirname, "./employees.json")
 const data = JSON.parse(fs.readFileSync(filename, "utf-8")).employees
-for(employee of data) {
-    const {password, ...sanitizedEmployee} = employee
-    employee = sanitizedEmployee
-}
 
 // Connecting to the database
 const initialSetup = async () => {
