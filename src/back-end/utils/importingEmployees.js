@@ -5,8 +5,8 @@ const fs = require("fs");
 
 // MongoDB connection info
 const url = `${process.env.MONGO_URL}`;
-const dbName = "employeesManagement";
-const collectionName = "employees";
+const dbName = `${process.env.DB_NAME}`;
+const collectionName = `${process.env.EMPLOYEES_COLLECTION}`;
 
 // Reading the array of items and discarding the plaintexts passwords
 const filename = path.join(__dirname, `./${process.env.DATA_SRC}`);
@@ -23,7 +23,7 @@ const initialSetup = async () => {
     const collection = db.collection(collectionName);
 
     // The following lines determine if the initial setup already occurred
-    const cursor = await collection.find({});
+    const cursor = collection.find({});
     const documents = await cursor.toArray();
     if (documents.length === 0) {
       const insertResult = await collection.insertMany(data);
