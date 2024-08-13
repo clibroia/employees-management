@@ -14,6 +14,8 @@ This basic web app belongs to my portfolio. It consists of a:
 - client-server communication, implemented via REST APIs
 - containerization, implemented with Docker
 
+All the tests were written using the Mocha testing framework
+
 ## Libraries
 
 ### Back-end
@@ -24,6 +26,11 @@ This basic web app belongs to my portfolio. It consists of a:
 
 - bcrypt, for hashing plaintext passwords
 - dotenv, to access environment variables defined in .env
+
+### Testing
+
+- chai, employed to write tests using the TDD assertion style
+- mongodb-memory-server, to run an in-memory MongoDB server for testing purposes  
 
 ### Linting and Formatting Code
 
