@@ -10,13 +10,13 @@ const EmployeeSchema = new Schema({
     min: 1001,
     validate: {
       validator: Number.isInteger,
-      message: "{VALUE} is not an integer"
+      message: "{VALUE} is not an integer",
     },
   },
   name: {
     firstName: {
       type: String,
-      required: true
+      required: true,
     },
     middleName: {
       type: String,
@@ -78,7 +78,10 @@ const EmployeeSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    match: [/^(?!.*\.\.)[^\s@]+[^\.]@[^\.][^\s@]+\.[^\s@]+$/, "Please enter a valid email address"],
+    match: [
+      /^(?!.*\.\.)[^\s@]+[^.]@[^.][^\s@]+\.[^\s@]+$/,
+      "Please enter a valid email address",
+    ],
   },
   phone: {
     type: String,
