@@ -30,7 +30,7 @@ All the tests were written using the Mocha testing framework
 ### Testing
 
 - chai, employed to write tests using the TDD assertion style
-- mongodb-memory-server, to run an in-memory MongoDB server for testing purposes  
+- mongodb-memory-server, to run an in-memory MongoDB server for testing purposes
 
 ### Linting and Formatting Code
 
