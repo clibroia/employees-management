@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -26,20 +24,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Get latest commit for the remote repository
-        run: echo "REMOTE_SHA=$(git rev-parse origin/main)" >> $GITHUB_ENV
-
-      - name: Get list of changed files
+      - name: Run linter on all files
         run: |
-          files=$(git diff --name-only $REMOTE_SHA HEAD \
-            | tr '\n' ' ')
-          echo "FILES=$files" >> $GITHUB_ENV
+          echo "Linting files..."
+          npx eslint .
 
-      - name: Run linter on changed files
+      - name: Run prettier on all files
         run: |
-          if [ -n "$FILES" ]; then
-            echo "Linting $FILES"
-            npx eslint $FILES
-          else
-            echo "No file changed"
-          fi
+          echo "Making all files prettier..."
+          npx prettier --write .
