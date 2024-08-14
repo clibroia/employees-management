@@ -31,7 +31,7 @@ jobs:
 
       - name: Get list of changed files
         run: |
-          files=$(git diff --name-only ${{ env.REMOTE_SHA }} HEAD \
+          files=$(git diff --name-only $REMOTE_SHA HEAD \
             | tr '\n' ' ')
           echo "FILES=$files" >> $GITHUB_ENV
 
@@ -41,5 +41,5 @@ jobs:
             echo "Linting $FILES"
             npx eslint $FILES
           else
-            echo "No JavaScript files changed"
+            echo "No file changed"
           fi
