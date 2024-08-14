@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -26,10 +26,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Get latest commit for the remote repository
+        run: echo "REMOTE_SHA=$(git rev-parse origin/main)" >> $GITHUB_ENV
+
       - name: Get list of changed files
         run: |
-          files=$(git diff --name-only HEAD^ HEAD \
-            | grep '\.js$' \
+          files=$(git diff --name-only ${{ env.REMOTE_SHA }} HEAD \
             | tr '\n' ' ')
           echo "FILES=$files" >> $GITHUB_ENV
 
