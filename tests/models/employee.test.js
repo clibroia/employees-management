@@ -99,7 +99,7 @@ describe("Employee model", () => {
     assert.isString(savedEmployee.email, "email must be a string");
     assert.match(
       savedEmployee.email,
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      /^(?!.*\.\.)[^\s@]+[^.]@[^.][^\s@]+\.[^\s@]+$/,
       "email must match the prescribed regex",
     );
     assert.strictEqual(
@@ -111,7 +111,7 @@ describe("Employee model", () => {
     assert.isString(savedEmployee.phone, "phone property must be a string");
     assert.match(
       savedEmployee.phone,
-      /^\+[0-9]+$/,
+      /^\+\d{7,15}$/,
       "phone must match the prescribed regex",
     );
     assert.strictEqual(
