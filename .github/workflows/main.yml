@@ -29,7 +29,7 @@ jobs:
       - name: Check for CI commit
         run: |
           if git log -1 --pretty=%B | grep -q "\[ci skip\]"; then
-            echo "CI commit detected, skipping linting and formatting steps"
+            echo "CI commit detected, skipping linting step"
             echo "skip=true" >> $GITHUB_ENV
           else
             echo "skip=false" >> $GITHUB_ENV
@@ -40,6 +40,50 @@ jobs:
           if [ "$skip" != "true" ]; then
             echo "Linting files..."
             npx eslint .
+          fi
+
+      - name: Commit changes
+        run: |
+          if [ "$skip" != "true" ]; then
+            echo "Committing changes..."
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add .
+            git commit -m "Linted and prettier files [ci skip]"
+          fi
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "$skip" != "true" ]; then
+            echo "Pushing changes..."
+            git push origin main
+          fi
+
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "./package.json"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check for CI commit
+        run: |
+          if git log -1 --pretty=%B | grep -q "\[ci skip\]"; then
+            echo "CI commit detected, skipping formatting step"
+            echo "skip=true" >> $GITHUB_ENV
+          else
+            echo "skip=false" >> $GITHUB_ENV
           fi
 
       - name: Run prettier on all files
@@ -56,7 +100,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add .
-            git commit -m "Linted and prettier files [ci skip]"
+            git commit -m "Prettier files [ci skip]"
           fi
 
       - name: Push changes
