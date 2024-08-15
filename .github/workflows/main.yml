@@ -26,7 +26,7 @@ jobs:
 
       - name: Check for CI commit
         run: |
-          if [ git log -1 --pretty=%B | grep -q "\[ci skip\]" ]; then
+          if git log -1 --pretty=%B | grep -q "\[ci skip\]"; then
             echo "CI commit detected, skipping linting and formatting steps"
             echo "skip=true" >> $GITHUB_ENV
           else
