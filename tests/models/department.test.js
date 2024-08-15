@@ -463,4 +463,52 @@ describe("Department model", () => {
       assert.strictEqual(err.errors.phone.path, "phone");
     }
   });
+
+  // Test 31
+  it("should fail to create a department with a duplicate id", async () => {
+    try {
+      const department = new Department(DepartmentsDummyData.thirtyOne);
+      await department.save();
+      assert.fail("Expected validation error not thrown");
+    } catch (err) {
+      assert.strictEqual(err.errorResponse.code, 11000);
+      assert.strictEqual(err.errorResponse.keyPattern.id, 1);
+    }
+  });
+
+  // Test 32
+  it("should fail to create a department with a duplicate name", async () => {
+    try {
+      const department = new Department(DepartmentsDummyData.thirtyTwo);
+      await department.save();
+      assert.fail("Expected validation error not thrown");
+    } catch (err) {
+      assert.strictEqual(err.errorResponse.code, 11000);
+      assert.strictEqual(err.errorResponse.keyPattern.name, 1);
+    }
+  });
+
+  // Test 33
+  it("should fail to create a department with a duplicate email", async () => {
+    try {
+      const department = new Department(DepartmentsDummyData.thirtyThree);
+      await department.save();
+      assert.fail("Expected validation error not thrown");
+    } catch (err) {
+      assert.strictEqual(err.errorResponse.code, 11000);
+      assert.strictEqual(err.errorResponse.keyPattern.email, 1);
+    }
+  });
+
+  // Test 34
+  it("should fail to create a department with a duplicate phone", async () => {
+    try {
+      const department = new Department(DepartmentsDummyData.thirtyFour);
+      await department.save();
+      assert.fail("Expected validation error not thrown");
+    } catch (err) {
+      assert.strictEqual(err.errorResponse.code, 11000);
+      assert.strictEqual(err.errorResponse.keyPattern.phone, 1);
+    }
+  });
 });

@@ -233,6 +233,38 @@ const DepartmentsDummyData = {
     email: "bad.department@example.com",
     phone: "1239874562",
   },
+  thirtyOne: {
+    id: 3,
+    name: "Sales",
+    employeesNumber: 15,
+    budget: 1000000,
+    email: "bad.department@example.com",
+    phone: "+1239874562",
+  },
+  thirtyTwo: {
+    id: 4,
+    name: "Finance",
+    employeesNumber: 15,
+    budget: 1000000,
+    email: "bad.department@example.com",
+    phone: "+1239874562",
+  },
+  thirtyThree: {
+    id: 4,
+    name: "Sales",
+    employeesNumber: 15,
+    budget: 1000000,
+    email: "good.department@example.com",
+    phone: "+1239874562",
+  },
+  thirtyFour: {
+    id: 4,
+    name: "Sales",
+    employeesNumber: 15,
+    budget: 1000000,
+    email: "bad.department@example.com",
+    phone: "+1234567890",
+  },
 };
 
 module.exports = DepartmentsDummyData;
