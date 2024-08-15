@@ -26,7 +26,7 @@ jobs:
 
       - name: Check for CI commit
         run: |
-          if git log -1 --pretty=%B | grep -q "\[ci skip\]"; then
+          if [ git log -1 --pretty=%B | grep -q "\[ci skip\]" ]; then
             echo "CI commit detected, skipping linting and formatting steps"
             echo "skip=true" >> $GITHUB_ENV
           else
@@ -35,21 +35,21 @@ jobs:
 
       - name: Run linter on all files
         run: |
-          if $skip != true; then
+          if [ "$skip" != "true" ]; then
             echo "Linting files..."
             npx eslint .
           fi
 
       - name: Run prettier on all files
         run: |
-          if $skip != true; then
+          if [ "$skip" != "true" ]; then
             echo "Making all files prettier..."
             npx prettier --write .
           fi
 
       - name: Commit changes
         run: |
-          if $skip != true; then
+          if [ "$skip" != "true" ]; then
             echo "Committing changes..."
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -61,7 +61,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if $skip != true; then
+          if [ "$skip" != "true" ]; then
             echo "Pushing changes..."
             git push origin main
           fi
