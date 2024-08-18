@@ -20,17 +20,24 @@ All the tests were written using the Mocha testing framework
 
 ### Back-end
 
+- express-validator, to validate and sanitize input data
+- jsonwebtoken, to implement an authentication mechanism with JWT
 - mongodb, for connecting to MongoDB
+- mongoose, to define a collection's schema
 
 ### Utilities
 
 - bcrypt, for hashing plaintext passwords
+- cors, for Cross-Origin Resource Sharing
 - dotenv, to access environment variables defined in .env
+- winston, for logging purposes
+- winston-mongodb, to log to a MongoDB collection
 
 ### Testing
 
 - chai, employed to write tests using the TDD assertion style
 - mongodb-memory-server, to run an in-memory MongoDB server for testing purposes
+- sinon, for spies, stubs and mocks in unit testing
 
 ### Linting and Formatting Code
 
