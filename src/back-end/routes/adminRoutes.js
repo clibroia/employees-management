@@ -6,7 +6,7 @@ const authenticateToken = require("../authentication/auth");
 const {
   departmentValidation,
   employeeValidation,
-} = require("../validation/validate");
+} = require("../validation/modelsValidation");
 const Department = require("./../models/department");
 const Employee = require("./../models/employee");
 

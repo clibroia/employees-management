@@ -2,7 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const { validationResult, matchedData } = require("express-validator");
 const jwt = require("jsonwebtoken");
-const { credentialsValidation } = require("../validation/validate");
+const {
+  credentialsValidation,
+} = require("../validation/credentialsValidation");
 
 const loginRouter = express.Router();
 
