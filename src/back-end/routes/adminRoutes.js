@@ -5,7 +5,8 @@ const { validationResult, matchedData } = require("express-validator");
 const authenticateToken = require("../authentication/auth");
 const {
   departmentValidation,
-  employeeValidation,
+  employeeCreateValidation,
+  employeeUpdateValidation,
 } = require("../validation/modelsValidation");
 const Department = require("./../models/department");
 const Employee = require("./../models/employee");
@@ -15,7 +16,7 @@ const adminRouter = express.Router();
 adminRouter.post(
   "/new-employee",
   authenticateToken,
-  employeeValidation,
+  employeeCreateValidation,
   async (req, res, next) => {
     // Logger
     const logger = req.app.locals.logger;
@@ -47,10 +48,10 @@ adminRouter.post(
       const phoneTest = await Employee.findOne({ phone: data.phone });
       if (emailTest || phoneTest) {
         logger.warn(
-          "[RESOURCE CONFLICT] Tried to insert duplicate employee's email or phone",
+          "[RESOURCE CONFLICT] Attempted to duplicate employee's email or phone",
         );
         return next({
-          msg: "[RESOURCE CONFLICT] Employee's email or phone already present",
+          msg: "[RESOURCE CONFLICT] Employee's email or phone already in use",
         });
       }
 
@@ -93,7 +94,7 @@ adminRouter.post(
         `[ADMIN ACTION] Employee Created with employeeId ${savedNewEmployee.id}`,
       );
 
-      // Close DB connections
+      // Close DB connection
       await mongoose.connection.close();
     } catch (err) {
       return next(err);
@@ -138,10 +139,10 @@ adminRouter.post(
       const phoneTest = await Department.findOne({ phone: data.phone });
       if (emailTest || nameTest || phoneTest) {
         logger.warn(
-          "[RESOURCE CONFLICT] Tried to insert duplicate department's email, name or phone",
+          "[RESOURCE CONFLICT] Attempted to duplicate department's email, name or phone",
         );
         return next({
-          msg: "[RESOURCE CONFLICT] Department's email, name or phone already present",
+          msg: "[RESOURCE CONFLICT] Department's email, name or phone already in use",
         });
       }
 
@@ -210,7 +211,7 @@ adminRouter.post(
         `[ADMIN ACTION] Department Created with departmentId ${savedNewDepartment.id}`,
       );
 
-      // Close DB connections
+      // Close DB connection
       await mongoose.connection.close();
     } catch (err) {
       return next(err);
@@ -219,30 +220,139 @@ adminRouter.post(
   },
 );
 
-// adminRouter.put("/update-employee/:id", authenticateToken, employeeValidation, async (req, res, next) => {
-//   // Mongo DB variables
-//   const mongooseUri = `${process.env.MONGOOSE_URI}`;
-//   const mongoUri = `${process.env.MONGO_URI}`;
+adminRouter.put(
+  "/update-employee/:id",
+  authenticateToken,
+  employeeUpdateValidation,
+  async (req, res, next) => {
+    // Logger
+    const logger = req.app.locals.logger;
 
-//   // Log client for MongoDB
-//   const client = new MongoClient(mongoUri);
-//   await client.connect();
-//   const transportOptions = {
-//     db: await Promise.resolve(client),
-//     collection: "logs",
-//   };
-//   logger.add(new winston.transports.MongoDB(transportOptions));
+    // Mongoose URI
+    const mongooseUri = `${process.env.MONGOOSE_URI}`;
 
-//   // Check validation errors
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     const firstError = errors.array({ onlyFirstError: true })[0];
-//     logger.warn(firstError.msg);
-//     return next(firstError);
-//   }
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const firstError = errors.array({ onlyFirstError: true })[0];
+      logger.warn(firstError.msg);
+      return next(firstError);
+    }
 
-//   // Sanitized inputs
-//   const data = matchedData(req);
-// });
+    // Validate id parameter
+    if (!req.params.id.match(/^[1-9]\d{3,}$/)) {
+      logger.warn(
+        "[PARAMETER ERROR] Wrong structure for the provided id parameter",
+      );
+      return next({ msg: "[PARAMETER ERROR] Invalid id parameter" });
+    }
+    const referencedId = Number.parseInt(req.params.id, 10);
+    if (!Number.isInteger(referencedId)) {
+      logger.warn("[PARAMETER ERROR] A non-integer id parameter was provided");
+      return next({ msg: "[PARAMETER ERROR] Invalid id parameter" });
+    }
+    if (referencedId < 1001) {
+      logger.warn(
+        "[PARAMETER ERROR] An id parameter below the minimum was provided",
+      );
+      return next({ msg: "[PARAMETER ERROR] Invalid id parameter" });
+    }
+
+    // Sanitized inputs
+    const data = matchedData(req);
+    if (!data.name) {
+      data.name = {};
+    }
+    if (!data.department) {
+      data.department = {};
+    }
+
+    try {
+      // Connect to MongoDB with Mongoose
+      await mongoose.connect(mongooseUri);
+      if (!mongoose.connection.db) {
+        logger.error("[SERVER ERROR] Error establishing Mongoose connection");
+        throw new Error();
+      }
+      // Check if an employee exists with an ID equal to id
+      const employee = await Employee.findOne({ id: referencedId });
+      if (!employee) {
+        logger.warn("[NOT FOUND] Referenced employee not in the database");
+        const error = new Error();
+        error.msg = "[NOT FOUND] Resource not found";
+        throw error;
+      }
+
+      // Check if an employee exists with email equal to data.email, if provided
+      if (data.email) {
+        const emailTest = await Employee.findOne({
+          email: data.email,
+          id: { $ne: referencedId },
+        });
+        if (emailTest) {
+          logger.warn(
+            "[RESOURCE CONFLICT] Attempted to update an employee's email to one already in use",
+          );
+          const error = new Error();
+          error.msg =
+            "[RESOURCE CONFLICT] Employee's email or phone already in use";
+          throw error;
+        }
+      }
+
+      // Check if an employee exists with phone number equal to data.phone, if provided
+      if (data.phone) {
+        const phoneTest = await Employee.findOne({
+          phone: data.phone,
+          id: { $ne: referencedId },
+        });
+        if (phoneTest) {
+          logger.warn(
+            "[RESOURCE CONFLICT] Attempted to update an employee's phone number to one already in use",
+          );
+          const error = new Error();
+          error.msg =
+            "[RESOURCE CONFLICT] Employee's email or phone already in use";
+          throw error;
+        }
+      }
+
+      // Update employee
+      const result = await Employee.updateOne(
+        {
+          id: referencedId,
+        },
+        {
+          $set: {
+            "name.firstName": data.name.firstName || employee.name.firstName,
+            "name.middleName": data.name.middleName || employee.name.middleName,
+            "name.lastName": data.name.lastName || employee.name.lastName,
+            "department.name": data.department.name || employee.department.name,
+            "department.head": data.department.head || employee.department.head,
+            role: data.role || employee.role,
+            hiredOn: data.hiredOn || employee.hiredOn,
+            email: data.email || employee.email,
+            phone: data.phone || employee.phone,
+            password: data.password || employee.password,
+          },
+        },
+      );
+
+      if (result.matchedCount !== 1) {
+        logger.error("[SERVER ERROR] Error updating an employee record");
+        throw new Error();
+      }
+
+      // Log
+      logger.info(`[ADMIN ACTION] Updated employee with id: ${employee.id}`);
+
+      // Close DB connection
+      await mongoose.connection.close();
+    } catch (err) {
+      return next(err);
+    }
+    return res.status(200).json("Employee successfully updated");
+  },
+);
 
 module.exports = adminRouter;

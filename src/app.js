@@ -27,8 +27,12 @@ app.use("/login", loginRoute);
 // Global error handler
 /* eslint-disable-next-line no-unused-vars */
 app.use((err, req, res, next) => {
-  // Input validation error
+  // Input validation errors
   if (err.msg && err.msg.includes("[VALIDATION ERROR]")) {
+    return res.status(400).json({ message: `${err.msg}` });
+  }
+
+  if (err.msg && err.msg.includes("[PARAMETER ERROR]")) {
     return res.status(400).json({ message: `${err.msg}` });
   }
 
@@ -42,6 +46,11 @@ app.use((err, req, res, next) => {
     return res
       .status(401)
       .json({ message: `[Authentication error] ${err.name}` });
+  }
+
+  // Resource not found
+  if (err.msg && err.msg.includes("[NOT FOUND]")) {
+    return res.status(404).json({ message: `${err.msg}` });
   }
 
   // Resource conflict
