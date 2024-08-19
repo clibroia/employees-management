@@ -182,4 +182,77 @@ const employeeValidation = checkSchema(
   ["body"],
 );
 
-module.exports = { credentialsValidation, employeeValidation };
+const departmentValidation = checkSchema(
+  {
+    name: {
+      trim: true,
+      notEmpty: {
+        errorMessage: "[VALIDATION ERROR] Department name is required",
+      },
+      toUpperCase: true,
+      isIn: {
+        options: [
+          [
+            "HR",
+            "FINANCE",
+            "SALES",
+            "CUSTOMER SERVICE",
+            "IT",
+            "OPERATIONS",
+            "R&D",
+            "LEGAL",
+            "ADMINISTRATIVE",
+            "PROCUREMENT",
+          ],
+        ],
+        errorMessage:
+          "[VALIDATION ERROR] Invalid department name. Please select a valid department",
+      },
+      escape: true,
+    },
+    budget: {
+      trim: true,
+      notEmpty: {
+        errorMessage: "[VALIDATION ERROR] Budget is required",
+      },
+      isInt: {
+        options: {
+          min: 0,
+          allow_leading_zeroes: false,
+        },
+        errorMessage:
+          "[VALIDATION ERROR] Budget must be a non-negative integer without leading zeroes",
+      },
+    },
+    email: {
+      trim: true,
+      notEmpty: {
+        errorMessage: "[VALIDATION ERROR] Email is required",
+      },
+      toLowerCase: true,
+      matches: {
+        options: /^(?!.*\.\.)[^\s@]+[^.]@[^.][^\s@]+\.[^\s@]+$/,
+        errorMessage: "[VALIDATION ERROR] Invalid email format",
+      },
+      escape: true,
+    },
+    phone: {
+      trim: true,
+      notEmpty: {
+        errorMessage: "[VALIDATION ERROR] Phone number is required",
+      },
+      matches: {
+        options: /^\+\d{7,15}$/,
+        errorMessage:
+          "[VALIDATION ERROR] Invalid phone number. Use format with international prefix (+1234567890)",
+      },
+    },
+  },
+  ["body"],
+);
+
+module.exports = {
+  credentialsValidation,
+  departmentValidation,
+  employeeValidation,
+};
