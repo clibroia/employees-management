@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const initializeLogger = require("./back-end/utils/logger");
 
 const app = express();
 app.use("*", cors()); // To refine further
@@ -8,6 +9,12 @@ app.use("*", cors()); // To refine further
 const port = `${process.env.SERVER_PORT}`;
 
 app.use(express.json());
+
+// Logger
+(async () => {
+  const logger = await initializeLogger();
+  app.locals.logger = logger;
+})();
 
 // Route files
 const adminRoutes = require("./back-end/routes/adminRoutes");

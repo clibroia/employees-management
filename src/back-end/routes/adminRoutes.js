@@ -1,9 +1,6 @@
 require("dotenv").config();
-require("winston-mongodb");
-const winston = require("winston");
 const mongoose = require("mongoose");
 const express = require("express");
-const MongoClient = require("mongodb").MongoClient;
 const { validationResult, matchedData } = require("express-validator");
 const authenticateToken = require("../authentication/auth");
 const {
@@ -12,7 +9,6 @@ const {
 } = require("../validation/validate");
 const Department = require("./../models/department");
 const Employee = require("./../models/employee");
-const logger = require("./../utils/logger");
 
 const adminRouter = express.Router();
 
@@ -21,18 +17,11 @@ adminRouter.post(
   authenticateToken,
   employeeValidation,
   async (req, res, next) => {
-    // Mongo DB variables
-    const mongooseUri = `${process.env.MONGOOSE_URI}`;
-    const mongoUri = `${process.env.MONGO_URI}`;
+    // Logger
+    const logger = req.app.locals.logger;
 
-    // Log client for MongoDB
-    const client = new MongoClient(mongoUri);
-    await client.connect();
-    const transportOptions = {
-      db: await Promise.resolve(client),
-      collection: "logs",
-    };
-    logger.add(new winston.transports.MongoDB(transportOptions));
+    // Mongoose URI
+    const mongooseUri = `${process.env.MONGOOSE_URI}`;
 
     // Check validation errors
     const errors = validationResult(req);
@@ -106,7 +95,6 @@ adminRouter.post(
 
       // Close DB connections
       await mongoose.connection.close();
-      await client.close();
     } catch (err) {
       return next(err);
     }
@@ -119,18 +107,11 @@ adminRouter.post(
   authenticateToken,
   departmentValidation,
   async (req, res, next) => {
-    // Mongo DB variables
-    const mongooseUri = `${process.env.MONGOOSE_URI}`;
-    const mongoUri = `${process.env.MONGO_URI}`;
+    // Logger
+    const logger = req.app.locals.logger;
 
-    // Log client for MongoDB
-    const client = new MongoClient(mongoUri);
-    await client.connect();
-    const transportOptions = {
-      db: await Promise.resolve(client),
-      collection: "logs",
-    };
-    logger.add(new winston.transports.MongoDB(transportOptions));
+    // Mongoose URI
+    const mongooseUri = `${process.env.MONGOOSE_URI}`;
 
     // Check validation errors
     const errors = validationResult(req);
@@ -231,12 +212,37 @@ adminRouter.post(
 
       // Close DB connections
       await mongoose.connection.close();
-      await client.close();
     } catch (err) {
       return next(err);
     }
     return res.status(201).json({ message: "Department successfully created" });
   },
 );
+
+// adminRouter.put("/update-employee/:id", authenticateToken, employeeValidation, async (req, res, next) => {
+//   // Mongo DB variables
+//   const mongooseUri = `${process.env.MONGOOSE_URI}`;
+//   const mongoUri = `${process.env.MONGO_URI}`;
+
+//   // Log client for MongoDB
+//   const client = new MongoClient(mongoUri);
+//   await client.connect();
+//   const transportOptions = {
+//     db: await Promise.resolve(client),
+//     collection: "logs",
+//   };
+//   logger.add(new winston.transports.MongoDB(transportOptions));
+
+//   // Check validation errors
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     const firstError = errors.array({ onlyFirstError: true })[0];
+//     logger.warn(firstError.msg);
+//     return next(firstError);
+//   }
+
+//   // Sanitized inputs
+//   const data = matchedData(req);
+// });
 
 module.exports = adminRouter;
