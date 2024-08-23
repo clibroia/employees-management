@@ -26,6 +26,61 @@ const {
 
 const adminRouter = express.Router();
 
+adminRouter.get(
+  "/get-department/:id",
+  authenticateToken,
+  async (req, res, next) => {
+    // Logger
+    const logger = req.app.locals.logger;
+
+    let department;
+
+    // Validate id parameter
+    const idParameterCheck = checkIdParameterIssues(
+      req.params.id,
+      "Department",
+      logger,
+    );
+    if (idParameterCheck[0] === 1) {
+      return next(idParameterCheck[1]);
+    }
+    const referencedId = idParameterCheck[1];
+
+    try {
+      // Check if a department exists with an ID equal to id
+      const checkExistenceResult = await checkExistence(
+        { id: referencedId },
+        Department,
+        logger,
+      );
+      if (checkExistenceResult[0] === 1) {
+        return next(checkExistenceResult[1]);
+      }
+      department = checkExistenceResult[1];
+
+      // Compute employeesNumber
+      const employeesNumber = await getEmployeesNumber(department.name, logger);
+
+      if (employeesNumber !== department.employeesNumber) {
+        // Update department
+        const toUpdate = { employeesNumber };
+        updateRecord(Department, referencedId, toUpdate, logger);
+        department.employeesNumber = employeesNumber;
+      }
+
+      logger.info(
+        `[ADMIN ACTION] Requested data from department with id: ${department.id}`,
+      );
+    } catch (err) {
+      return next(err);
+    }
+    /* eslint-disable-next-line no-unused-vars */
+    const { _id, __v, ...response } = department.toObject();
+    /* eslint-enable-next-line no-unused-vars */
+    return res.status(200).json(response);
+  },
+);
+
 adminRouter.post(
   "/new-employee",
   authenticateToken,
@@ -88,6 +143,7 @@ adminRouter.post(
     const data = matchedData(req);
 
     try {
+      // Check if email, name or phone already exist
       const toCheck = { email: data.email, name: data.name, phone: data.phone };
       const uniquenessIssue = await checkUniqueness(
         toCheck,
@@ -96,6 +152,19 @@ adminRouter.post(
       );
       if (uniquenessIssue) {
         return next(uniquenessIssue);
+      }
+
+      if (data.head) {
+        // Check if an employee exists with id equal to head
+        const query = { id: data.head };
+        const checkExistenceResult = await checkExistence(
+          query,
+          Employee,
+          logger,
+        );
+        if (checkExistenceResult[0] === 1) {
+          return next(checkExistenceResult[1]);
+        }
       }
 
       // Compute new id
@@ -251,6 +320,19 @@ adminRouter.put(
         return next(anotherRecordIssue);
       }
 
+      if (data.head) {
+        // Check if an employee exists with id equal to head
+        const query = { id: data.head };
+        const checkExistenceResult = await checkExistence(
+          query,
+          Employee,
+          logger,
+        );
+        if (checkExistenceResult[0] === 1) {
+          return next(checkExistenceResult[1]);
+        }
+      }
+
       // Compute employeesNumber
       const employeesNumber = await getEmployeesNumber(data.name, logger);
 
@@ -258,6 +340,7 @@ adminRouter.put(
       const toUpdate = {
         name: data.name || department.name,
         employeesNumber,
+        head: data.head || department.head,
         budget: data.budget || department.budget,
         email: data.email || department.email,
         phone: data.phone || department.phone,

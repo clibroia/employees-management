@@ -56,7 +56,7 @@ const getEmployeesNumber = async (departmentName, logger) => {
   try {
     const result = await Employee.aggregate([
       {
-        $match: { "department.name": departmentName },
+        $match: { department: departmentName },
       },
       {
         $group: {

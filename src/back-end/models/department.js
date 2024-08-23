@@ -31,6 +31,15 @@ const DepartmentSchema = new Schema({
       "PROCUREMENT",
     ],
   },
+  head: {
+    type: Number,
+    required: false,
+    min: 1001,
+    validate: {
+      validator: Number.isInteger,
+      message: "{VALUE} is not an integer",
+    },
+  },
   employeesNumber: {
     type: Number,
     required: true,

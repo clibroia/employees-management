@@ -28,7 +28,7 @@ const employeeCreateValidation = checkSchema(
       toUpperCase: true,
       escape: true,
     },
-    "department.name": {
+    department: {
       trim: true,
       notEmpty: {
         errorMessage: "[VALIDATION ERROR] Department name is required",
@@ -53,13 +53,6 @@ const employeeCreateValidation = checkSchema(
           "[VALIDATION ERROR] Invalid department name. Please select a valid department",
       },
       escape: true,
-    },
-    "department.head": {
-      optional: true,
-      isBoolean: {
-        errorMessage: "[VALIDATION ERROR] Head must be a boolean value",
-      },
-      toBoolean: true,
     },
     role: {
       trim: true,
@@ -160,7 +153,7 @@ const employeeUpdateValidation = checkSchema(
       toUpperCase: true,
       escape: true,
     },
-    "department.name": {
+    department: {
       trim: true,
       optional: true,
       notEmpty: {
@@ -186,13 +179,6 @@ const employeeUpdateValidation = checkSchema(
           "[VALIDATION ERROR] Invalid department name. Please select a valid department",
       },
       escape: true,
-    },
-    "department.head": {
-      optional: true,
-      isBoolean: {
-        errorMessage: "[VALIDATION ERROR] Head must be a boolean value",
-      },
-      toBoolean: true,
     },
     role: {
       trim: true,
@@ -295,6 +281,21 @@ const departmentCreateValidation = checkSchema(
       },
       escape: true,
     },
+    head: {
+      trim: true,
+      optional: true,
+      notEmpty: {
+        errorMessage: "[VALIDATION ERROR] Head cannot be empty if provided",
+      },
+      isInt: {
+        options: {
+          min: 1001,
+          allow_leading_zeroes: false,
+        },
+        errorMessage:
+          "[VALIDATION ERROR] Head must an integer greater than 1000",
+      },
+    },
     budget: {
       trim: true,
       notEmpty: {
@@ -364,6 +365,21 @@ const departmentUpdateValidation = checkSchema(
           "[VALIDATION ERROR] Invalid department name. Please select a valid department",
       },
       escape: true,
+    },
+    head: {
+      trim: true,
+      optional: true,
+      notEmpty: {
+        errorMessage: "[VALIDATION ERROR] Head cannot be empty if provided",
+      },
+      isInt: {
+        options: {
+          min: 1001,
+          allow_leading_zeroes: false,
+        },
+        errorMessage:
+          "[VALIDATION ERROR] Head must an integer greater than 1000",
+      },
     },
     budget: {
       trim: true,

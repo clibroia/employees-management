@@ -7,9 +7,7 @@
         "middleName": "Marie",
         "lastName": "Johnson"
       },
-      "department": {
-        "name": "HR"
-      },
+      "department": "HR",
       "role": "Manager",
       "hiredOn": "2020-01-15",
       "email": "alice.johnson@example.com",
@@ -23,9 +21,7 @@
         "middleName": "Lee",
         "lastName": "Smith"
       },
-      "department": {
-        "name": "Finance"
-      },
+      "department": "Finance",
       "role": "Manager",
       "hiredOn": "2018-06-01",
       "email": "bob.smith@example.com",
@@ -38,9 +34,7 @@
         "firstName": "Carol",
         "lastName": "Davis"
       },
-      "department": {
-        "name": "IT"
-      },
+      "department": "IT",
       "role": "Director",
       "hiredOn": "2021-09-10",
       "email": "carol.davis@example.com",
@@ -53,9 +47,7 @@
         "firstName": "David",
         "lastName": "Lee"
       },
-      "department": {
-        "name": "Sales"
-      },
+      "department": "Sales",
       "role": "Assistant Manager",
       "hiredOn": "2019-03-20",
       "email": "david.lee@example.com",
@@ -69,9 +61,7 @@
         "middleName": "Grace",
         "lastName": "Turner"
       },
-      "department": {
-        "name": "Customer Service"
-      },
+      "department": "Customer Service",
       "role": "Clerk L3",
       "hiredOn": "2022-07-12",
       "email": "emma.turner@example.com",
@@ -84,9 +74,7 @@
         "firstName": "Frank",
         "lastName": "Martin"
       },
-      "department": {
-        "name": "Operations"
-      },
+      "department": "Operations",
       "role": "Vice-President",
       "hiredOn": "2017-11-25",
       "email": "frank.martin@example.com",
@@ -99,9 +87,7 @@
         "firstName": "Grace",
         "lastName": "Wilson"
       },
-      "department": {
-        "name": "Legal"
-      },
+      "department": "Legal",
       "role": "Manager",
       "hiredOn": "2023-05-18",
       "email": "grace.wilson@example.com",
@@ -114,9 +100,7 @@
         "firstName": "Henry",
         "lastName": "Brown"
       },
-      "department": {
-        "name": "Administrative"
-      },
+      "department": "Administrative",
       "role": "Clerk L5",
       "hiredOn": "2016-02-14",
       "email": "henry.brown@example.com",
@@ -129,9 +113,7 @@
         "firstName": "Claire",
         "lastName": "Martinez"
       },
-      "department": {
-        "name": "Procurement"
-      },
+      "department": "Procurement",
       "role": "Manager",
       "hiredOn": "2019-08-23",
       "email": "claire.martinez@example.com",
@@ -144,9 +126,7 @@
         "firstName": "Robert",
         "lastName": "Adams"
       },
-      "department": {
-        "name": "R&D"
-      },
+      "department": "R&D",
       "role": "Chief Operating Officer",
       "hiredOn": "2015-12-01",
       "email": "robert.adams@example.com",
