@@ -4,6 +4,15 @@ const { MongoClient } = require("mongodb");
 
 const mongoUri = `${process.env.MONGO_URI}`;
 
+let logger = null;
+
+const getLogger = () => {
+  if (!logger) {
+    throw new Error("Logger has not been initialized yet");
+  }
+  return logger;
+};
+
 const initializeLogger = async () => {
   try {
     // MongoDB connection
@@ -32,4 +41,8 @@ const initializeLogger = async () => {
   }
 };
 
-module.exports = initializeLogger;
+const setLogger = (initializedLogger) => {
+  logger = initializedLogger;
+};
+
+module.exports = { getLogger, initializeLogger, setLogger };

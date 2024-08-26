@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const initializeLogger = require("./back-end/utils/logger");
+const { initializeLogger, setLogger } = require("./back-end/utils/logger");
 const connectToDB = require("./back-end/utils/connectToDB");
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.json());
   try {
     // Logger
     const logger = await initializeLogger();
-    app.locals.logger = logger;
+    setLogger(logger);
 
     // MongoDB connection
     const mongooseUri = `${process.env.MONGOOSE_URI}`;

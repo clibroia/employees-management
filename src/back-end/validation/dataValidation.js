@@ -1,6 +1,22 @@
+const { getLogger } = require("../utils/logger");
 const { validationResult } = require("express-validator");
 
-const checkIdParameterIssues = (idParameter, modelName, logger) => {
+const validateIdParameter = (req, res, next) => {
+  const logger = getLogger();
+  const idParameter = req.params.id;
+  let modelName = null;
+  if (req.route.path.includes("employee")) {
+    modelName = "Employee";
+  }
+  if (req.route.path.includes("department")) {
+    modelName = "Department";
+  }
+  if (!modelName) {
+    logger.warn("[NOT FOUND] The requested endpoint doesn't exist");
+    const error = new Error();
+    error.msg = "[NOT FOUND] The requested endpoint doesn't exist";
+    return next(error);
+  }
   let regex, minValue, maxValue;
   switch (modelName) {
     case "Employee":
@@ -13,28 +29,37 @@ const checkIdParameterIssues = (idParameter, modelName, logger) => {
       minValue = 1;
       maxValue = 100;
       break;
-    default:
+    default: {
       logger.error("[SERVER ERROR] Error determining the model name");
-      throw new Error();
+      const error = new Error();
+      error.msg = "[SERVER ERROR] Error determining the model name";
+      return next(error);
+    }
   }
   if (!idParameter.match(regex)) {
     logger.warn(
       "[PARAMETER ERROR] Wrong structure for the provided id parameter",
     );
-    return [1, { msg: "[PARAMETER ERROR] Invalid id parameter" }];
+    const error = new Error();
+    error.msg = "[PARAMETER ERROR] Invalid id parameter";
+    return next(error);
   }
   const referencedId = Number.parseInt(idParameter, 10);
   if (!Number.isInteger(referencedId)) {
     logger.warn("[PARAMETER ERROR] A non-integer id parameter was provided");
-    return [1, { msg: "[PARAMETER ERROR] Invalid id parameter" }];
+    const error = new Error();
+    error.msg = "[PARAMETER ERROR] Invalid id parameter";
+    return next(error);
   }
   if (referencedId < minValue || referencedId > maxValue) {
     logger.warn(
       "[PARAMETER ERROR] An id parameter outside the accepted range was provided",
     );
-    return [1, { msg: "[PARAMETER ERROR] Invalid id parameter" }];
+    const error = new Error();
+    error.msg = "[PARAMETER ERROR] Invalid id parameter";
+    return next(error);
   }
-  return [0, referencedId];
+  next();
 };
 
 /*
@@ -52,4 +77,4 @@ const checkValidationErrors = (req, logger) => {
   return 0;
 };
 
-module.exports = { checkIdParameterIssues, checkValidationErrors };
+module.exports = { checkValidationErrors, validateIdParameter };

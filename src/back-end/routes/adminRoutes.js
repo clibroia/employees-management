@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { getLogger } = require("../utils/logger");
 const express = require("express");
 const { matchedData } = require("express-validator");
 const authenticateToken = require("../authentication/auth");
@@ -9,8 +10,8 @@ const {
   employeeUpdateValidation,
 } = require("../validation/modelsValidation");
 const {
-  checkIdParameterIssues,
   checkValidationErrors,
+  validateIdParameter,
 } = require("../validation/dataValidation");
 const Department = require("./../models/department");
 const Employee = require("./../models/employee");
@@ -25,31 +26,53 @@ const {
 } = require("../utils/DBOperations");
 
 const adminRouter = express.Router();
+const logger = getLogger();
+
+adminRouter.get(
+  "/get-employee/:id",
+  authenticateToken,
+  validateIdParameter,
+  async (req, res, next) => {
+    const idParameter = Number.parseInt(req.params.id, 10);
+    let employee;
+
+    try {
+      // Check if an employee exists with an ID equal to id
+      const checkExistenceResult = await checkExistence(
+        { id: idParameter },
+        Employee,
+        logger,
+      );
+      if (checkExistenceResult[0] === 1) {
+        return next(checkExistenceResult[1]);
+      }
+      employee = checkExistenceResult[1];
+
+      logger.info(
+        `[ADMIN ACTION] Requested data from employee with id: ${employee.id}`,
+      );
+    } catch (err) {
+      return next(err);
+    }
+    /* eslint-disable-next-line no-unused-vars */
+    const { _id, __v, password, ...response } = employee.toObject();
+    /* eslint-enable-next-line no-unused-vars */
+    return res.status(200).json(response);
+  },
+);
 
 adminRouter.get(
   "/get-department/:id",
   authenticateToken,
+  validateIdParameter,
   async (req, res, next) => {
-    // Logger
-    const logger = req.app.locals.logger;
-
+    const idParameter = Number.parseInt(req.params.id, 10);
     let department;
-
-    // Validate id parameter
-    const idParameterCheck = checkIdParameterIssues(
-      req.params.id,
-      "Department",
-      logger,
-    );
-    if (idParameterCheck[0] === 1) {
-      return next(idParameterCheck[1]);
-    }
-    const referencedId = idParameterCheck[1];
 
     try {
       // Check if a department exists with an ID equal to id
       const checkExistenceResult = await checkExistence(
-        { id: referencedId },
+        { id: idParameter },
         Department,
         logger,
       );
@@ -64,7 +87,7 @@ adminRouter.get(
       if (employeesNumber !== department.employeesNumber) {
         // Update department
         const toUpdate = { employeesNumber };
-        updateRecord(Department, referencedId, toUpdate, logger);
+        updateRecord(Department, idParameter, toUpdate, logger);
         department.employeesNumber = employeesNumber;
       }
 
@@ -86,9 +109,6 @@ adminRouter.post(
   authenticateToken,
   employeeCreateValidation,
   async (req, res, next) => {
-    // Logger
-    const logger = req.app.locals.logger;
-
     // Check validation errors
     const firstError = checkValidationErrors(req, logger);
     if (firstError) {
@@ -130,9 +150,6 @@ adminRouter.post(
   authenticateToken,
   departmentCreateValidation,
   async (req, res, next) => {
-    // Logger
-    const logger = req.app.locals.logger;
-
     // Check validation errors
     const firstError = checkValidationErrors(req, logger);
     if (firstError) {
@@ -192,10 +209,10 @@ adminRouter.post(
 adminRouter.put(
   "/update-employee/:id",
   authenticateToken,
+  validateIdParameter,
   employeeUpdateValidation,
   async (req, res, next) => {
-    // Logger
-    const logger = req.app.locals.logger;
+    const idParameter = Number.parseInt(req.params.id, 10);
 
     // Check validation errors
     const firstError = checkValidationErrors(req, logger);
@@ -203,30 +220,16 @@ adminRouter.put(
       return next(firstError);
     }
 
-    // Validate id parameter
-    const idParameterCheck = checkIdParameterIssues(
-      req.params.id,
-      "Employee",
-      logger,
-    );
-    if (idParameterCheck[0] === 1) {
-      return next(idParameterCheck[1]);
-    }
-    const referencedId = idParameterCheck[1];
-
     // Sanitized inputs
     const data = matchedData(req);
     if (!data.name) {
       data.name = {};
     }
-    if (!data.department) {
-      data.department = {};
-    }
 
     try {
       // Check if an employee exists with an ID equal to id
       const checkExistenceResult = await checkExistence(
-        { id: referencedId },
+        { id: idParameter },
         Employee,
         logger,
       );
@@ -239,28 +242,26 @@ adminRouter.put(
       const toCheck = { email: data.email, phone: data.phone };
       const anotherRecordIssue = await anotherRecordExists(
         toCheck,
-        referencedId,
+        idParameter,
         Employee,
         logger,
       );
       if (anotherRecordIssue) {
         return next(anotherRecordIssue);
       }
-
       // Update employee
       const toUpdate = {
         "name.firstName": data.name.firstName || employee.name.firstName,
         "name.middleName": data.name.middleName || employee.name.middleName,
         "name.lastName": data.name.lastName || employee.name.lastName,
-        "department.name": data.department.name || employee.department.name,
-        "department.head": data.department.head || employee.department.head,
+        department: data.department || employee.department,
         role: data.role || employee.role,
         hiredOn: data.hiredOn || employee.hiredOn,
         email: data.email || employee.email,
         phone: data.phone || employee.phone,
         password: data.password || employee.password,
       };
-      updateRecord(Employee, referencedId, toUpdate, logger);
+      updateRecord(Employee, idParameter, toUpdate, logger);
     } catch (err) {
       return next(err);
     }
@@ -271,10 +272,10 @@ adminRouter.put(
 adminRouter.put(
   "/update-department/:id",
   authenticateToken,
+  validateIdParameter,
   departmentUpdateValidation,
   async (req, res, next) => {
-    // Logger
-    const logger = req.app.locals.logger;
+    const idParameter = Number.parseInt(req.params.id, 10);
 
     // Check validation errors
     const firstError = checkValidationErrors(req, logger);
@@ -282,24 +283,13 @@ adminRouter.put(
       return next(firstError);
     }
 
-    // Validate id parameter
-    const idParameterCheck = checkIdParameterIssues(
-      req.params.id,
-      "Department",
-      logger,
-    );
-    if (idParameterCheck[0] === 1) {
-      return next(idParameterCheck[1]);
-    }
-    const referencedId = idParameterCheck[1];
-
     // Sanitized inputs
     const data = matchedData(req);
 
     try {
       // Check if a department exists with an ID equal to id
       const checkExistenceResult = await checkExistence(
-        { id: referencedId },
+        { id: idParameter },
         Department,
         logger,
       );
@@ -312,7 +302,7 @@ adminRouter.put(
       const toCheck = { name: data.name, email: data.email, phone: data.phone };
       const anotherRecordIssue = await anotherRecordExists(
         toCheck,
-        referencedId,
+        idParameter,
         Department,
         logger,
       );
@@ -345,7 +335,7 @@ adminRouter.put(
         email: data.email || department.email,
         phone: data.phone || department.phone,
       };
-      updateRecord(Department, referencedId, toUpdate, logger);
+      updateRecord(Department, idParameter, toUpdate, logger);
     } catch (err) {
       return next(err);
     }
